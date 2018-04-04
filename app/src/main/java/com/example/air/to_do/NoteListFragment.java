@@ -10,7 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.view.inputmethod.InputMethodManager;
 
 
 /**
@@ -32,13 +32,17 @@ public class NoteListFragment extends Fragment {
 
     public void initialiazeViews(View view) {
         setHasOptionsMenu(true);
-        rv = (RecyclerView) view.findViewById(R.id.list_note_recyclerview);
+        rv = view.findViewById(R.id.list_note_recyclerview);
+        ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
         //adapter = new NotesListRVAdapter();
         //rv.setAdapter(adapter);
         getActivity().setTitle("Мои заметки");
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
         refreshAdapter();
+
     }
 
     @Override
@@ -61,7 +65,7 @@ public class NoteListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
+        inflater.inflate(R.menu.menu_main, menu);
     }
 
 

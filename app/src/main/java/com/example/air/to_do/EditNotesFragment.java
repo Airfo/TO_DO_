@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,8 +20,7 @@ import com.example.air.to_do.model.Note;
  * A simple {@link Fragment} subclass.
  */
 public class EditNotesFragment extends Fragment {
-    private EditText task_name_et;
-
+    private EditText note_text_et;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,6 +34,12 @@ public class EditNotesFragment extends Fragment {
 
     public void initialiazeViews(android.view.View v) {
         ((MainActivity) getActivity()).setTitle("Новая заметка");
+        note_text_et=v.findViewById(R.id.edit_note_edtitext);
+        note_text_et.requestFocus();
+        ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        ((MainActivity) getActivity()).keyboardShowed=true;
+        ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         setHasOptionsMenu(true);
 
     }
@@ -45,8 +51,7 @@ public class EditNotesFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.getItem(0).setTitle(R.string.done);
-        menu.getItem(0).setIcon(R.mipmap.ic_done);
+        inflater.inflate(R.menu.menu_done, menu);
     }
 
     @Override

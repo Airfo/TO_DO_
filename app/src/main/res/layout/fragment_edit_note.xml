@@ -2,18 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+
         <EditText
             android:id="@+id/edit_note_edtitext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:singleLine="false"
             android:text=""
-            android:textAlignment="gravity"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:gravity="fill_horizontal|top|left"
             android:textColor="@color/colorEditNote"
             android:textSize="15sp"
             android:imeOptions="flagNavigateNext"
@@ -21,5 +20,5 @@
             android:inputType="textMultiLine|textAutoCorrect|textLongMessage"
             android:background="@android:color/transparent"
             />
-    </ScrollView>
+
 </LinearLayout>
