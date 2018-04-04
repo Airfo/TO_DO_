@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.fast.myapplication.MainActivity">
+    <item
+        android:id="@+id/action_add_new_note"
+        android:icon="@mipmap/ic_add_note"
+        android:title="@string/add_note"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_sort_by_date"
+        android:title="@string/sort_by_date"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_sort_by_title"
+        android:title="@string/sort_by_title"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_open_about"
+        android:title="@string/about"
+        app:showAsAction="never" />
+</menu>

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">TO_DO</string>
-    <string name="action_settings">Settings</string>
+    <string name="add_note">Добавить</string>
+    <string name="sort_by_date">Сортировать по дате</string>
+    <string name="sort_by_title">Сортировать по заголовку</string>
+    <string name="about">О программе</string>
+    <string name="done">Готово</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
