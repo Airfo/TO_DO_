@@ -37,7 +37,6 @@ public class EditNotesFragment extends Fragment {
         note_text_et=v.findViewById(R.id.edit_note_edtitext);
         note_text_et.requestFocus();
         ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        ((MainActivity) getActivity()).keyboardShowed=true;
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         setHasOptionsMenu(true);

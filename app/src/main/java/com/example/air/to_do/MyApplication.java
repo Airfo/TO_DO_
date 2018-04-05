@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package io.realm.examples.intro;
-
+package com.example.air.to_do;
 import android.app.Application;
-
 import io.realm.Realm;
 
 public class MyApplication extends Application {

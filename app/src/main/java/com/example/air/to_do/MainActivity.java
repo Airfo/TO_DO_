@@ -4,19 +4,36 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.inputmethod.InputMethodManager;
 
+import java.util.Arrays;
+import java.util.Calendar;
+
 import com.example.air.to_do.model.Note;
+
+import io.realm.OrderedRealmCollectionChangeListener;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 
 public class MainActivity extends AppCompatActivity {
     private static Toolbar toolbar;
+    public Realm realm;
+    private RealmResults<Note> notes;
+    NoteCollection notesReaded;
     public Note newNote, editNote;
     public int editNotePosition;
     Boolean menuCreated=false;
-    public Boolean keyboardShowed=false;
+
+    private final OrderedRealmCollectionChangeListener<RealmResults<Note>> realmChangeListener = (people, changeSet) -> {
+        String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
+        String deletions = changeSet.getDeletions().length == 0 ? "" : "\n - Deletions: " + Arrays.toString(changeSet.getDeletions());
+        String changes = changeSet.getChanges().length == 0 ? "" : "\n - Changes: " + Arrays.toString(changeSet.getChanges());
+
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -32,8 +49,34 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ChangeFragment(new NoteListFragment());
 
+        //Realm.deleteRealm(Realm.getDefaultConfiguration());
+        realm = Realm.getDefaultInstance();
+        notes = realm.where(Note.class).findAllAsync();
+        notes.addChangeListener(realmChangeListener);
+        example(realm);
     }
+    private void example(Realm realm) {
+        int i =0;
+        /*realm.executeTransaction(r -> {
+            Note note = r.createObject(Note.class, 1);
+            note.setText("Young Person");
+            note.setCalendar(Calendar.getInstance());
+        });*/
+        showStatus(i);
+        final Note note = realm.where(Note.class).findFirst();
 
+        // Update person in a transaction
+        realm.executeTransaction(r -> {
+            // Managed objects can be modified inside transactions.
+            note.setText("Senior Person");
+            note.setCalendar(Calendar.getInstance());
+            showStatus(i);
+        });
+
+        /*// Delete all persons
+        showStatus("Deleting all persons");
+        realm.executeTransaction(r -> r.delete(Person.class));*/
+    }
     public InputMethodManager getInputMethodManager(){
         return (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
@@ -45,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
+    public void showStatus (int i) {
+        Log.d("value", "Value^     "+ realm.where(Note.class).findAll().get(i).getTitle()+" "+realm.where(Note.class).findAll().get(i).getFormatedDateString());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        notes.removeAllChangeListeners(); // Remove the change listener when no longer needed.
+        realm.close(); // Remember to close Realm when done.
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {

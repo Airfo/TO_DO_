@@ -1,4 +1,6 @@
-package com.example.air.to_do.model;
+package com.example.air.to_do;
+
+import com.example.air.to_do.model.Note;
 
 import java.util.ArrayList;
 import java.util.Collections;

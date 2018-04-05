@@ -1,25 +1,38 @@
 package com.example.air.to_do.model;
 
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.JsonWriter;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
 
 
-public class Note implements Comparable<Note>{
+public class Note extends RealmObject implements Comparable<Note>{
+
+
+    @PrimaryKey
+    private long id;
+    @Index
     private String title;
-    private String text;
-    private Calendar calendar;
-    private String[] monthNames = {"Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"};
 
-    public Note(String text, Calendar calendar) {
-        this.text = text;
-        this.calendar=calendar;
-        if(text.length()>10){
-            title=text.substring(0,10);
-        }else{
-            title=text;
-        }
+    private String text;
+    private Date date;
+
+    public Calendar getCalendar() {
+        Calendar calendar=new GregorianCalendar();
+        calendar.setTime(date);
+        return  calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.date=calendar.getTime();
     }
 
     public void setTitle(String title) {
@@ -28,6 +41,11 @@ public class Note implements Comparable<Note>{
 
     public void setText(String text) {
         this.text = text;
+        if(text.length()>10){
+            this.title=text.substring(0,10);
+        }else{
+            this.title=text;
+        }
     }
 
     public String getTitle() {
@@ -38,13 +56,19 @@ public class Note implements Comparable<Note>{
         return text;
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getFormatedDateString() {
-        if (calendar != null) {
-            return Integer.toString(calendar.get(Calendar.DAY_OF_MONTH))
-                    + " " + monthNames[calendar.get(Calendar.MONTH)]
-                    + " " + calendar.get(Calendar.YEAR);
+        if (this.getCalendar() != null) {
+            return Integer.toString(this.getCalendar().get(Calendar.DAY_OF_MONTH))
+                    + " " + Month.getMonth(this.getCalendar().get(Calendar.MONTH))
+                    + " " + this.getCalendar().get(Calendar.YEAR);
         } else {
             return "";
         }
@@ -52,7 +76,7 @@ public class Note implements Comparable<Note>{
 
     @Override
     public int compareTo(@NonNull Note o) {
-        return calendar.compareTo(o.calendar);
+        return (this.getCalendar()).compareTo(o.getCalendar());
     }
 
 }
