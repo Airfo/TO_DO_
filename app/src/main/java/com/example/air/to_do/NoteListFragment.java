@@ -12,12 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.air.to_do.model.Note;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class NoteListFragment extends Fragment {
-
     private RecyclerView rv;
     private static NotesListRVAdapter adapter;
 
@@ -25,6 +26,7 @@ public class NoteListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        ((MainActivity)getActivity()).isNew=false;
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
         initialiazeViews(view);
         return view;
@@ -36,9 +38,9 @@ public class NoteListFragment extends Fragment {
         ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
-        //adapter = new NotesListRVAdapter();
-        //rv.setAdapter(adapter);
-        getActivity().setTitle("Мои заметки");
+        adapter = new NotesListRVAdapter(((MainActivity) getActivity()).realm.where(Note.class).findAll());
+        rv.setAdapter(adapter);
+        getActivity().setTitle(R.string.header_list_fragment);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
         refreshAdapter();
@@ -47,10 +49,22 @@ public class NoteListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.action_add_new_note) {
-            changeFragment(new EditNotesFragment());
-            return true;
+        switch (menuItem.getItemId()){
+            case R.id.action_add_new_note:
+                ((MainActivity)getActivity()).isNew=true;
+                changeFragment(new EditNotesFragment());
+                return true;
+            case R.id.action_sort_by_date:
+                return true;
+            case R.id.action_sort_by_title:
+                return true;
+            case R.id.action_open_about:
+                return true;
         }
+
+
+
+
         return super.onOptionsItemSelected(menuItem);
     }
 

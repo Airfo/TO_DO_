@@ -10,17 +10,13 @@ import com.example.air.to_do.model.Note;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmResults;
+
 
 class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHolder>{
-    private static List<Note> Array =new ArrayList<Note>();
-
-    NotesListRVAdapter(List<Note> array){
-        this.Array=array;
-    }
-
-    public void deleteNote(int pos){
-        Array.remove(pos);
-        notifyDataSetChanged();
+    public RealmResults<Note> notes;
+    NotesListRVAdapter(RealmResults<Note> notes){
+        this.notes=notes;
     }
 
     @Override
@@ -31,14 +27,13 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.title_note_tv.setText(Array.get(position).getTitle());
-        holder.date_note_tv.setText(Array.get(position).getFormatedDateString());
-
+        holder.title_note_tv.setText(notes.get(position).getTitle());
+        holder.date_note_tv.setText(notes.get(position).getFormatedDateString());
     }
 
     @Override
     public int getItemCount() {
-        return Array.size();
+        return notes.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,8 +41,8 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
 
         public ViewHolder(View view) {
             super(view);
-            title_note_tv = (TextView)view.findViewById(R.id.title_note_textview);
-            date_note_tv = (TextView)view.findViewById(R.id.date_note_textview);
+            title_note_tv = view.findViewById(R.id.title_note_textview);
+            date_note_tv = view.findViewById(R.id.date_note_textview);
 
         }
 

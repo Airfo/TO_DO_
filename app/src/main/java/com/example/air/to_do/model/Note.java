@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.JsonWriter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -66,9 +68,8 @@ public class Note extends RealmObject implements Comparable<Note>{
 
     public String getFormatedDateString() {
         if (this.getCalendar() != null) {
-            return Integer.toString(this.getCalendar().get(Calendar.DAY_OF_MONTH))
-                    + " " + Month.getMonth(this.getCalendar().get(Calendar.MONTH))
-                    + " " + this.getCalendar().get(Calendar.YEAR);
+            DateFormat df = new SimpleDateFormat("EEE, d MMM yyyy, HH:mm");
+            return df.format(this.getCalendar().getTime());
         } else {
             return "";
         }

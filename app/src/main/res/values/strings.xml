@@ -6,5 +6,6 @@
     <string name="about">О программе</string>
     <string name="done">Готово</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="header_edit_fragment">Новая заметка</string>
+    <string name="header_list_fragment">Мои заметки</string>
 </resources>

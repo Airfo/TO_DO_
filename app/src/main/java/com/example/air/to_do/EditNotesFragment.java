@@ -19,28 +19,29 @@ import com.example.air.to_do.model.Note;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class EditNotesFragment extends Fragment {
+public class EditNotesFragment extends Fragment implements EditNotesContract.view{
     private EditText note_text_et;
+    private EditNotesPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_note, container, false);
         initialiazeViews(v);
+        presenter=new EditNotesPresenter(((MainActivity)getActivity()).realm, ((MainActivity)getActivity()).notes,this);
         // Inflate the layout for this fragment
         return v;
 
     }
 
     public void initialiazeViews(android.view.View v) {
-        ((MainActivity) getActivity()).setTitle("Новая заметка");
+        getActivity().setTitle(R.string.header_edit_fragment);
         note_text_et=v.findViewById(R.id.edit_note_edtitext);
         note_text_et.requestFocus();
         ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         setHasOptionsMenu(true);
-
     }
 
     public void changeFragment(Fragment fragment) {
@@ -56,24 +57,24 @@ public class EditNotesFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == android.R.id.home) {
-            callOnBackPressed();
+            presenter.onBackPressed();
         }
         if (menuItem.getItemId() == R.id.action_add_new_note) {
-
+            presenter.onOptionEditDoneClick(note_text_et.getText().toString(),((MainActivity) getActivity()).isNew, ((MainActivity) getActivity()).editNotePosition);
             return true;
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
     public void callOnBackPressed() {
-        ((MainActivity) getActivity()).onBackPressed();
+        (getActivity()).onBackPressed();
     }
 
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    public void updateNewNote(Note note) {
+    public void updateNote(Note note) {
         ((MainActivity) getActivity()).newNote = note;
     }
 

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFD874</color>
+    <color name="colorPrimary">#ffa425</color>
     <color name="colorPrimaryDark">#FFD874</color>
     <color name="colorAccent">#F76200</color>
     <color name="colorEditNote">#000000</color>
-    <color name="colorText">#74E053</color>
+    <color name="colorText">#000000</color>
     <color name="colorBackground">#FFE22B</color>
-    <color name="colorHorLine">#F76200</color>
+    <color name="colorHorLine">#000000</color>
     <color name="color_cursor_edit_frag">#000000</color>
 </resources>
