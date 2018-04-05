@@ -58,25 +58,10 @@ public class MainActivity extends AppCompatActivity {
     }
     private void example(Realm realm) {
         int i =0;
-        /*realm.executeTransaction(r -> {
-            Note note = r.createObject(Note.class, 1);
-            note.setText("Young Person");
-            note.setCalendar(Calendar.getInstance());
-        });*/
-        showStatus(i);
-        final Note note = realm.where(Note.class).findFirst();
 
-        // Update person in a transaction
-        realm.executeTransaction(r -> {
-            // Managed objects can be modified inside transactions.
-            note.setText("Senior Person");
-            note.setCalendar(Calendar.getInstance());
-            showStatus(i);
-        });
-
-        /*// Delete all persons
-        showStatus("Deleting all persons");
-        realm.executeTransaction(r -> r.delete(Person.class));*/
+        // Delete all persons
+        //showStatus("Deleting all persons");
+        //realm.executeTransaction(r -> r.delete(Note.class));
     }
     public InputMethodManager getInputMethodManager(){
         return (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -90,7 +75,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showStatus (int i) {
-        Log.d("value", "Value^     "+ realm.where(Note.class).findAll().get(i).getTitle()+" "+realm.where(Note.class).findAll().get(i).getFormatedDateString());
+        for(i=0;i<realm.where(Note.class).count();i++){
+            Log.d("value", "Value^     "+ realm.where(Note.class).findAll().get(i).getTitle()+" "+realm.where(Note.class).findAll().get(i).getFormatedDateString());
+        }
+
     }
 
     @Override

@@ -19,6 +19,14 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
         this.notes=notes;
     }
 
+    public void setNotes(RealmResults<Note> notes) {
+        this.notes = notes;
+    }
+
+    public RealmResults<Note> getNotes(){
+            return notes;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false);
@@ -30,6 +38,7 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
         holder.title_note_tv.setText(notes.get(position).getTitle());
         holder.date_note_tv.setText(notes.get(position).getFormatedDateString());
     }
+
 
     @Override
     public int getItemCount() {
