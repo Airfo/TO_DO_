@@ -12,10 +12,10 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
     private RealmResults<Note> notes;
     private EditNotesFragment eNoteFragment;
 
-    public EditNotesPresenter(Realm realm,RealmResults<Note> notes, EditNotesFragment fragment) {
-        this.realm=realm;
-        this.notes=notes;
-        this.eNoteFragment=fragment;
+    public EditNotesPresenter(Realm realm, RealmResults<Note> notes, EditNotesFragment fragment) {
+        this.realm = realm;
+        this.notes = notes;
+        this.eNoteFragment = fragment;
     }
 
     @Override
@@ -24,16 +24,26 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
     }
 
     @Override
-    public void onOptionEditDoneClick(String text,boolean isNew,int position) {
-        if(isNew){
+    public void onOptionEditDoneClick(String text, boolean isNew, int position) {
+        if (isNew) {
+            if (!text.equals("")) {
+                realm.executeTransaction(r -> {
+                    Note note = r.createObject(Note.class, realm.where(Note.class).count() + 1);
+                    note.setText(text);
+                    note.setCalendar(Calendar.getInstance());
+                });
+                eNoteFragment.changeFragment(new NoteListFragment());
+            } else {
+                eNoteFragment.showError(eNoteFragment.getString(R.string.error_message_if_note_is_empty));
+            }
+        } else {
             realm.executeTransaction(r -> {
-                Note note = r.createObject(Note.class, realm.where(Note.class).count()+1);
+                Note note = realm.where(Note.class).findAll().get(position);
                 note.setText(text);
                 note.setCalendar(Calendar.getInstance());
+                eNoteFragment.changeFragment(new NoteListFragment());
             });
-        }else{
-
         }
-        eNoteFragment.changeFragment(new NoteListFragment());
+
     }
 }

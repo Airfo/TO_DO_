@@ -42,6 +42,9 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         setHasOptionsMenu(true);
+        if(!((MainActivity) getActivity()).isNew){
+            note_text_et.setText(((MainActivity) getActivity()).editNote.getText());
+        }
     }
 
     public void changeFragment(Fragment fragment) {

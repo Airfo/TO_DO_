@@ -23,11 +23,10 @@ public class MainActivity extends AppCompatActivity {
     private static Toolbar toolbar;
     public Realm realm;
     public RealmResults<Note> notes;
-    NoteCollection notesReaded;
     public Note newNote, editNote;
     public int editNotePosition;
-    Boolean menuCreated=false;
-    Boolean isNew=false;
+    public Boolean isNew=false;
+    public Boolean sortByDate=true;
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Note>> realmChangeListener = (people, changeSet) -> {
         String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());

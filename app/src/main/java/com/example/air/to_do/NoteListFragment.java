@@ -29,10 +29,11 @@ import io.realm.Sort;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NoteListFragment extends Fragment {
+public class NoteListFragment extends Fragment implements NoteRowClickListener<Note>{
     private RecyclerView rv;
     private static NotesListRVAdapter adapter;
     private boolean Sorting=false;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +56,15 @@ public class NoteListFragment extends Fragment {
         getActivity().setTitle(R.string.header_list_fragment);
         ((MainActivity)getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
-        refreshAdapter(null);
+        Sorting=true;
+        if(((MainActivity) getActivity()).sortByDate){
+            refreshAdapter(((MainActivity)getActivity()).realm.where(Note.class).sort("date", Sort.ASCENDING).findAll());
+        }else{
+            refreshAdapter(((MainActivity)getActivity()).realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
+        }
+
+
+        adapter.setRowClickListener(this);
     }
 
     @Override
@@ -67,10 +76,12 @@ public class NoteListFragment extends Fragment {
                 return true;
             case R.id.action_sort_by_date:
                 Sorting=true;
+                ((MainActivity) getActivity()).sortByDate=true;
                 refreshAdapter(((MainActivity)getActivity()).realm.where(Note.class).sort("date", Sort.ASCENDING).findAll());
                 return true;
             case R.id.action_sort_by_title:
                 Sorting=true;
+                ((MainActivity) getActivity()).sortByDate=false;
                 refreshAdapter(((MainActivity)getActivity()).realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
                 return true;
             case R.id.action_open_about:
@@ -87,16 +98,16 @@ public class NoteListFragment extends Fragment {
         TextView tv_About = new TextView(getContext());
         ImageView im_about = new ImageView(getContext());
         im_about.setImageDrawable(getContext().getDrawable(R.mipmap.ic_launcher));
-        tv_About.setText("TO_DO version - 0.5");
+        tv_About.setText(R.string.version);
         tv_About.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         im_about.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         linearLayout.addView(im_about);
         linearLayout.addView(tv_About);
         mDialogBuilder.setView(linearLayout);
-        mDialogBuilder.setTitle("О программе");
+        mDialogBuilder.setTitle(R.string.about);
         mDialogBuilder
                 .setCancelable(false)
-                .setNegativeButton("Выход",
+                .setNegativeButton(R.string.exit_about_button,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
@@ -131,4 +142,12 @@ public class NoteListFragment extends Fragment {
     }
 
 
+    @Override
+    public void onRowClicked(int id) {
+        ((MainActivity)getActivity()).isNew=false;
+        ((MainActivity) getActivity()).editNote=((MainActivity) getActivity()).realm.where(Note.class).findAll().get(id);
+        ((MainActivity)getActivity()).editNotePosition=id;
+        changeFragment(new EditNotesFragment());
+
+    }
 }
