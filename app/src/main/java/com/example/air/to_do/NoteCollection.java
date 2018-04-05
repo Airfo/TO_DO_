@@ -4,10 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NoteCollection {
-    private List<Note> notes=new ArrayList<Note>();
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.Index;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
-    public NoteCollection(List<Note> notes) {
+public class NoteCollection  {
+
+    private RealmList<Note> notes;
+
+    public NoteCollection(RealmList<Note> notes) {
         this.notes = notes;
         sortTaskList();
     }
@@ -20,9 +27,10 @@ public class NoteCollection {
         return notes.get(position);
     }
 
-    public List<Note> getNotesList(){
+    public RealmList<Note> getNotes() {
         return notes;
     }
+
     public void deleteNote(int position){
         notes.remove(position);
     }
