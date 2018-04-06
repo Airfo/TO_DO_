@@ -1,4 +1,4 @@
-package com.example.air.to_do;
+package com.example.air.to_do.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.util.Arrays;
 
+import com.example.air.to_do.R;
 import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.model.Note;
 
@@ -22,8 +23,7 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
     private static Toolbar toolbar;
     public Realm realm;
-    public RealmResults<Note> notes;
-    public Note newNote, editNote;
+    private RealmResults<Note> notes;
     public int editNotePosition;
     public Boolean isNew = false;
     public Boolean sortByDate = true;
@@ -48,20 +48,10 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ChangeFragment(new NoteListFragment());
-
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
         realm = Realm.getDefaultInstance();
         notes = realm.where(Note.class).findAllAsync();
         notes.addChangeListener(realmChangeListener);
-        example(realm);
-    }
-
-    private void example(Realm realm) {
-        int i = 0;
-
-        // Delete all persons
-        //showStatus("Deleting all persons");
-        //realm.executeTransaction(r -> r.delete(Note.class));
     }
 
     public InputMethodManager getInputMethodManager() {
@@ -75,11 +65,10 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void showStatus(int i) {
-        for (i = 0; i < realm.where(Note.class).count(); i++) {
+    public void showBD() {
+        for (int i = 0; i < realm.where(Note.class).count(); i++) {
             Log.d("value", "Value^     " + realm.where(Note.class).findAll().get(i).getTitle() + " " + realm.where(Note.class).findAll().get(i).getFormatedDateString());
         }
-
     }
 
     @Override

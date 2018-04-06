@@ -1,4 +1,4 @@
-package com.example.air.to_do.fragments;
+package com.example.air.to_do;
 
 import android.support.v4.app.Fragment;
 
@@ -12,15 +12,27 @@ public interface NoteListContract {
 
         public void changeFragment(Fragment fragment);
 
+        public void showAbout();
+
         public void showError(String message);
 
         public void refreshAdapter(RealmResults<Note> notes);
     }
 
     interface presenter {
-        public void onBackPressed();
+        public void onInitilizeViews(Boolean sortByDate);
 
-        public void onOptionNewNoteClick(String text, boolean isNew, int position);
+        public void onRowClicked();
+
+        public void onOptionAddNote();
+
+        public void onOptionSortByDate();
+
+        public void onOptionSortByTitle();
+
+        public void onOptionAboutClick();
+
+        public void onBackPressed();
 
     }
 

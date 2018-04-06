@@ -13,8 +13,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.air.to_do.EditNotesContract;
 import com.example.air.to_do.presenter.EditNotesPresenter;
-import com.example.air.to_do.MainActivity;
+import com.example.air.to_do.activity.MainActivity;
 import com.example.air.to_do.R;
 import com.example.air.to_do.model.Note;
 
@@ -31,7 +32,7 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_edit_note, container, false);
         initialiazeViews(v);
-        presenter=new EditNotesPresenter(((MainActivity)getActivity()).realm, ((MainActivity)getActivity()).notes,this);
+        presenter=new EditNotesPresenter(((MainActivity)getActivity()).realm, this);
         // Inflate the layout for this fragment
         return v;
 
@@ -46,7 +47,7 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
         ((MainActivity)getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         setHasOptionsMenu(true);
         if(!((MainActivity) getActivity()).isNew){
-            note_text_et.setText(((MainActivity) getActivity()).editNote.getText());
+            note_text_et.setText(((MainActivity) getActivity()).realm.where(Note.class).findAll().get(((MainActivity) getActivity()).editNotePosition).getText());
         }
     }
 
@@ -79,10 +80,5 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
-
-    public void updateNote(Note note) {
-        ((MainActivity) getActivity()).newNote = note;
-    }
-
 
 }

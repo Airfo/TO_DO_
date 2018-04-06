@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.air.to_do.MainActivity;
+import com.example.air.to_do.activity.MainActivity;
 import com.example.air.to_do.R;
 
 public class AboutDialog extends AlertDialog.Builder {

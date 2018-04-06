@@ -2,23 +2,21 @@ package com.example.air.to_do.presenter;
 
 import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.R;
-import com.example.air.to_do.fragments.EditNotesContract;
+import com.example.air.to_do.EditNotesContract;
 import com.example.air.to_do.fragments.EditNotesFragment;
 import com.example.air.to_do.model.Note;
 
 import java.util.Calendar;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
+
 
 public class EditNotesPresenter implements EditNotesContract.presenter {
     private Realm realm;
-    private RealmResults<Note> notes;
     private EditNotesFragment eNoteFragment;
 
-    public EditNotesPresenter(Realm realm, RealmResults<Note> notes, EditNotesFragment fragment) {
+    public EditNotesPresenter(Realm realm, EditNotesFragment fragment) {
         this.realm = realm;
-        this.notes = notes;
         this.eNoteFragment = fragment;
     }
 

@@ -12,21 +12,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
-import com.example.air.to_do.MainActivity;
+import com.example.air.to_do.activity.MainActivity;
+import com.example.air.to_do.NoteListContract;
 import com.example.air.to_do.R;
 import com.example.air.to_do.model.Note;
 import com.example.air.to_do.model.NoteDiffUtilCallback;
+import com.example.air.to_do.presenter.NoteListPresenter;
 
 import io.realm.RealmResults;
-import io.realm.Sort;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NoteListFragment extends Fragment implements NoteRowClickListener<Note> {
+public class NoteListFragment extends Fragment implements NoteRowClickListener<Note>, NoteListContract.view {
     private RecyclerView rv;
+    private NoteListPresenter presenter;
     private static NotesListRVAdapter adapter;
     private boolean Sorting = false;
 
@@ -35,6 +38,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         ((MainActivity) getActivity()).isNew = false;
+        presenter = new NoteListPresenter(((MainActivity) getActivity()).realm, this);
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
         initialiazeViews(view);
         return view;
@@ -52,11 +56,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
         Sorting = true;
-        if (((MainActivity) getActivity()).sortByDate) {
-            refreshAdapter(((MainActivity) getActivity()).realm.where(Note.class).sort("date", Sort.ASCENDING).findAll());
-        } else {
-            refreshAdapter(((MainActivity) getActivity()).realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
-        }
+        presenter.onInitilizeViews(((MainActivity) getActivity()).sortByDate);
         adapter.setRowClickListener(this);
     }
 
@@ -65,33 +65,38 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         switch (menuItem.getItemId()) {
             case R.id.action_add_new_note:
                 ((MainActivity) getActivity()).isNew = true;
-                changeFragment(new EditNotesFragment());
+                presenter.onOptionAddNote();
                 return true;
             case R.id.action_sort_by_date:
                 Sorting = true;
                 ((MainActivity) getActivity()).sortByDate = true;
-                refreshAdapter(((MainActivity) getActivity()).realm.where(Note.class).sort("date", Sort.ASCENDING).findAll());
+                presenter.onOptionSortByDate();
                 return true;
             case R.id.action_sort_by_title:
                 Sorting = true;
                 ((MainActivity) getActivity()).sortByDate = false;
-                refreshAdapter(((MainActivity) getActivity()).realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
+                presenter.onOptionSortByTitle();
                 return true;
             case R.id.action_open_about:
-                About();
+                presenter.onOptionAboutClick();
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
     }
 
-    private void About() {
-        final AboutDialog ab_dialog = new AboutDialog(this.getContext(), ((MainActivity)getActivity()));
+    public void showAbout() {
+        final AboutDialog ab_dialog = new AboutDialog(this.getContext(), ((MainActivity) getActivity()));
         ab_dialog.create();
         ab_dialog.show();
     }
 
     public void changeFragment(Fragment fragment) {
         ((MainActivity) getActivity()).ChangeFragment(fragment);
+    }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     public void refreshAdapter(RealmResults<Note> notes) {
@@ -117,8 +122,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     @Override
     public void onRowClicked(int id) {
         ((MainActivity) getActivity()).isNew = false;
-        ((MainActivity) getActivity()).editNote = ((MainActivity) getActivity()).realm.where(Note.class).findAll().get(id);
         ((MainActivity) getActivity()).editNotePosition = id;
-        changeFragment(new EditNotesFragment());
+        presenter.onRowClicked();
     }
 }

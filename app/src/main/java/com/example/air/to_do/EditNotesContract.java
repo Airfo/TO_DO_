@@ -1,4 +1,4 @@
-package com.example.air.to_do.fragments;
+package com.example.air.to_do;
 
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
