@@ -1,4 +1,4 @@
-package com.example.air.to_do;
+package com.example.air.to_do.fragments;
 
 public interface NoteRowClickListener<T> {
 

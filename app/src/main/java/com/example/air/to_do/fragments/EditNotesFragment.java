@@ -1,4 +1,4 @@
-package com.example.air.to_do;
+package com.example.air.to_do.fragments;
 
 
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.air.to_do.presenter.EditNotesPresenter;
+import com.example.air.to_do.MainActivity;
+import com.example.air.to_do.R;
 import com.example.air.to_do.model.Note;
 
 

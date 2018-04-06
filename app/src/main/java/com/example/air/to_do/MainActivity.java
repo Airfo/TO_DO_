@@ -10,8 +10,8 @@ import android.view.Menu;
 import android.view.inputmethod.InputMethodManager;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
+import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.model.Note;
 
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -25,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     public RealmResults<Note> notes;
     public Note newNote, editNote;
     public int editNotePosition;
-    public Boolean isNew=false;
-    public Boolean sortByDate=true;
+    public Boolean isNew = false;
+    public Boolean sortByDate = true;
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Note>> realmChangeListener = (people, changeSet) -> {
         String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
@@ -55,14 +55,16 @@ public class MainActivity extends AppCompatActivity {
         notes.addChangeListener(realmChangeListener);
         example(realm);
     }
+
     private void example(Realm realm) {
-        int i =0;
+        int i = 0;
 
         // Delete all persons
         //showStatus("Deleting all persons");
         //realm.executeTransaction(r -> r.delete(Note.class));
     }
-    public InputMethodManager getInputMethodManager(){
+
+    public InputMethodManager getInputMethodManager() {
         return (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
@@ -73,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void showStatus (int i) {
-        for(i=0;i<realm.where(Note.class).count();i++){
-            Log.d("value", "Value^     "+ realm.where(Note.class).findAll().get(i).getTitle()+" "+realm.where(Note.class).findAll().get(i).getFormatedDateString());
+    public void showStatus(int i) {
+        for (i = 0; i < realm.where(Note.class).count(); i++) {
+            Log.d("value", "Value^     " + realm.where(Note.class).findAll().get(i).getTitle() + " " + realm.where(Note.class).findAll().get(i).getFormatedDateString());
         }
 
     }
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         notes.removeAllChangeListeners(); // Remove the change listener when no longer needed.
         realm.close(); // Remember to close Realm when done.
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {

@@ -1,16 +1,12 @@
 package com.example.air.to_do.model;
 
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.JsonWriter;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;

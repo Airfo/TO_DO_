@@ -1,4 +1,4 @@
-package com.example.air.to_do;
+package com.example.air.to_do.fragments;
 
 
 import android.support.v7.widget.RecyclerView;
@@ -7,27 +7,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.example.air.to_do.R;
 import com.example.air.to_do.model.Note;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.realm.RealmResults;
 
 
-class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHolder>{
+class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHolder> {
     private RealmResults<Note> notes;
     private NoteRowClickListener<Note> rowClickListener;
 
-    NotesListRVAdapter(RealmResults<Note> notes){
-        this.notes=notes;
+    NotesListRVAdapter(RealmResults<Note> notes) {
+        this.notes = notes;
     }
 
     public void setNotes(RealmResults<Note> notes) {
         this.notes = notes;
     }
 
-    public RealmResults<Note> getNotes(){
-            return notes;
+    public RealmResults<Note> getNotes() {
+        return notes;
     }
 
     @Override
@@ -43,10 +43,11 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
         holder.item_note_rl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                rowClickListener.onRowClicked((int) (long)notes.get(holder.getAdapterPosition()).getId()-1);
+                rowClickListener.onRowClicked((int) (long) notes.get(holder.getAdapterPosition()).getId() - 1);
             }
         });
     }
+
     public void setRowClickListener(NoteRowClickListener<Note> rowClickListener) {
         this.rowClickListener = rowClickListener;
     }
@@ -59,11 +60,12 @@ class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHol
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title_note_tv, date_note_tv;
         RelativeLayout item_note_rl;
+
         public ViewHolder(View view) {
             super(view);
             title_note_tv = view.findViewById(R.id.title_note_textview);
             date_note_tv = view.findViewById(R.id.date_note_textview);
-            item_note_rl=view.findViewById(R.id.item_note_relativelay);
+            item_note_rl = view.findViewById(R.id.item_note_relativelay);
         }
 
     }

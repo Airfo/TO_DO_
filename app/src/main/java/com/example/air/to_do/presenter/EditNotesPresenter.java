@@ -1,5 +1,9 @@
-package com.example.air.to_do;
+package com.example.air.to_do.presenter;
 
+import com.example.air.to_do.fragments.NoteListFragment;
+import com.example.air.to_do.R;
+import com.example.air.to_do.fragments.EditNotesContract;
+import com.example.air.to_do.fragments.EditNotesFragment;
 import com.example.air.to_do.model.Note;
 
 import java.util.Calendar;
