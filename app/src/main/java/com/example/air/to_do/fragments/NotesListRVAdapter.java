@@ -11,15 +11,17 @@ import android.widget.TextView;
 import com.example.air.to_do.R;
 import com.example.air.to_do.model.Note;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 
 class NotesListRVAdapter extends RecyclerView.Adapter<NotesListRVAdapter.ViewHolder> {
+    private Realm realm=Realm.getDefaultInstance();
     private RealmResults<Note> notes;
     private NoteRowClickListener<Note> rowClickListener;
 
-    NotesListRVAdapter(RealmResults<Note> notes) {
-        this.notes = notes;
+    NotesListRVAdapter() {
+        this.notes = realm.where(Note.class).findAll();
     }
 
     public void setNotes(RealmResults<Note> notes) {

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.air.to_do.activity.MainActivity;
 import com.example.air.to_do.NoteListContract;
 import com.example.air.to_do.R;
+import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.model.Note;
 import com.example.air.to_do.model.NoteDiffUtilCallback;
 import com.example.air.to_do.presenter.NoteListPresenter;
@@ -32,13 +33,14 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     private NoteListPresenter presenter;
     private static NotesListRVAdapter adapter;
     private boolean Sorting = false;
+    private Mode mode= Mode.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ((MainActivity) getActivity()).isNew = false;
-        presenter = new NoteListPresenter(((MainActivity) getActivity()).realm, this);
+        mode.setIsNew(false);
+        presenter = new NoteListPresenter(this);
         View view = inflater.inflate(R.layout.fragment_note_list, container, false);
         initialiazeViews(view);
         return view;
@@ -50,13 +52,13 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
-        adapter = new NotesListRVAdapter(((MainActivity) getActivity()).realm.where(Note.class).findAll());
+        adapter = new NotesListRVAdapter();
         rv.setAdapter(adapter);
         getActivity().setTitle(R.string.header_list_fragment);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
         Sorting = true;
-        presenter.onInitilizeViews(((MainActivity) getActivity()).sortByDate);
+        presenter.onInitilizeViews();
         adapter.setRowClickListener(this);
     }
 
@@ -64,17 +66,14 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_add_new_note:
-                ((MainActivity) getActivity()).isNew = true;
                 presenter.onOptionAddNote();
                 return true;
             case R.id.action_sort_by_date:
                 Sorting = true;
-                ((MainActivity) getActivity()).sortByDate = true;
                 presenter.onOptionSortByDate();
                 return true;
             case R.id.action_sort_by_title:
                 Sorting = true;
-                ((MainActivity) getActivity()).sortByDate = false;
                 presenter.onOptionSortByTitle();
                 return true;
             case R.id.action_open_about:
@@ -121,8 +120,6 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
 
     @Override
     public void onRowClicked(int id) {
-        ((MainActivity) getActivity()).isNew = false;
-        ((MainActivity) getActivity()).editNotePosition = id;
-        presenter.onRowClicked();
+        presenter.onRowClicked(id);
     }
 }

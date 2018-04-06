@@ -16,16 +16,19 @@
 
 package com.example.air.to_do;
 import android.app.Application;
+
+import com.example.air.to_do.model.Mode;
+
 import io.realm.Realm;
 
 public class MyApplication extends Application {
-
+    Mode mode;
     @Override
     public void onCreate() {
         super.onCreate();
         // Initialize Realm. Should only be done once when the application starts.
         Realm.init(this);
-
+        mode=Mode.getInstance();
         // In this example, no default configuration is set,
         // so by default, `RealmConfiguration.Builder().build()` is used.
     }

@@ -20,9 +20,9 @@ public interface NoteListContract {
     }
 
     interface presenter {
-        public void onInitilizeViews(Boolean sortByDate);
+        public void onInitilizeViews();
 
-        public void onRowClicked();
+        public void onRowClicked(int id);
 
         public void onOptionAddNote();
 

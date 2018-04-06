@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import com.example.air.to_do.R;
 import com.example.air.to_do.fragments.NoteListFragment;
+import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.model.Note;
 
 import io.realm.OrderedRealmCollectionChangeListener;
@@ -22,17 +23,14 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
     private static Toolbar toolbar;
-    public Realm realm;
+    private Realm realm;
     private RealmResults<Note> notes;
-    public int editNotePosition;
-    public Boolean isNew = false;
-    public Boolean sortByDate = true;
+    private Mode mode;
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Note>> realmChangeListener = (people, changeSet) -> {
         String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
         String deletions = changeSet.getDeletions().length == 0 ? "" : "\n - Deletions: " + Arrays.toString(changeSet.getDeletions());
         String changes = changeSet.getChanges().length == 0 ? "" : "\n - Changes: " + Arrays.toString(changeSet.getChanges());
-
     };
 
     @Override
@@ -52,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         notes = realm.where(Note.class).findAllAsync();
         notes.addChangeListener(realmChangeListener);
+        mode.setIsNew(false);
+        mode.setSortByDate(true);
     }
 
     public InputMethodManager getInputMethodManager() {
@@ -63,12 +63,6 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.container_main_activity_layout, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    public void showBD() {
-        for (int i = 0; i < realm.where(Note.class).count(); i++) {
-            Log.d("value", "Value^     " + realm.where(Note.class).findAll().get(i).getTitle() + " " + realm.where(Note.class).findAll().get(i).getFormatedDateString());
-        }
     }
 
     @Override
