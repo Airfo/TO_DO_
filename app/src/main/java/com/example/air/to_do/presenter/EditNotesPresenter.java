@@ -1,6 +1,5 @@
 package com.example.air.to_do.presenter;
 
-import com.example.air.to_do.activity.MainActivity;
 import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.R;
 import com.example.air.to_do.EditNotesContract;
@@ -10,6 +9,7 @@ import com.example.air.to_do.model.Note;
 
 import java.util.Calendar;
 
+import io.realm.FieldAttribute;
 import io.realm.Realm;
 
 
@@ -25,7 +25,7 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
     @Override
     public void onInitilizeViews() {
         if (!mode.getIsNew()) {
-            eNoteFragment.setTextToEditText(realm.where(Note.class).findAll().get(mode.getEditNotePosition()).getText());
+            eNoteFragment.setTextToEditText(realm.where(Note.class).equalTo("id", mode.getEditNotePosition()).findFirst().getText());
         }else{
             eNoteFragment.setTextToEditText("");
         }
@@ -33,7 +33,7 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
 
     @Override
     public void onBackPressed() {
-        eNoteFragment.callOnBackPressed();
+        eNoteFragment.changeFragment(new NoteListFragment());
     }
 
     @Override
@@ -41,7 +41,14 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
         if (mode.getIsNew()) {
             if (!text.equals("")) {
                 realm.executeTransaction(r -> {
-                    Note note = r.createObject(Note.class, realm.where(Note.class).count() + 1);
+                    int nextId;
+                    Number currentIdNum = realm.where(Note.class).max("id");
+                    if(currentIdNum == null) {
+                        nextId = 1;
+                    } else {
+                        nextId = currentIdNum.intValue() + 1;
+                    }
+                    Note note = r.createObject(Note.class, nextId);
                     note.setText(text);
                     note.setCalendar(Calendar.getInstance());
                 });
@@ -51,11 +58,11 @@ public class EditNotesPresenter implements EditNotesContract.presenter {
             }
         } else {
             realm.executeTransaction(r -> {
-                Note note = realm.where(Note.class).findAll().get(mode.getEditNotePosition());
+                Note note = realm.where(Note.class).equalTo("id", mode.getEditNotePosition()).findFirst();
                 note.setText(text);
                 note.setCalendar(Calendar.getInstance());
-                eNoteFragment.changeFragment(new NoteListFragment());
             });
+            eNoteFragment.changeFragment(new NoteListFragment());
         }
 
     }

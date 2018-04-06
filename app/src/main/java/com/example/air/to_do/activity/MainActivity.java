@@ -2,6 +2,7 @@ package com.example.air.to_do.activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import java.util.Arrays;
 
 import com.example.air.to_do.R;
+import com.example.air.to_do.fragments.EditNotesFragment;
 import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.model.Note;
@@ -50,8 +52,6 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         notes = realm.where(Note.class).findAllAsync();
         notes.addChangeListener(realmChangeListener);
-        mode.setIsNew(false);
-        mode.setSortByDate(true);
     }
 
     public InputMethodManager getInputMethodManager() {
@@ -61,8 +61,13 @@ public class MainActivity extends AppCompatActivity {
     public void ChangeFragment(android.support.v4.app.Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container_main_activity_layout, fragment)
-                .addToBackStack(null)
                 .commit();
+    }
+
+    public void showBD() {
+        for (int i = 0; i < realm.where(Note.class).count(); i++) {
+            Log.d("value", "Value:     " + realm.where(Note.class).findAll().get(i).getTitle() + " " + realm.where(Note.class).findAll().get(i).getFormatedDateString());
+        }
     }
 
     @Override
@@ -75,8 +80,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == android.view.KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            return super.onKeyDown(keyCode, event);
+            if(mode.getSendDeleteMode()){
+                ((NoteListFragment) getSupportFragmentManager().findFragmentById(R.id.container_main_activity_layout)).exitSendDeleteMode();
+            }else{
+                Fragment frag=getSupportFragmentManager().findFragmentById(R.id.container_main_activity_layout);
+                if(frag.getClass().toString().equals((new EditNotesFragment()).getClass().toString())){
+                    ChangeFragment(new NoteListFragment());
+                }else{
+                    return super.onKeyDown(keyCode, event);
+                }
+            }
         }
-        return super.onKeyDown(keyCode, event);
+        return true;
     }
 }

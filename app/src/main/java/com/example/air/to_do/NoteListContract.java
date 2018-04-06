@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 
 import com.example.air.to_do.model.Note;
 
+import java.util.HashSet;
+
 import io.realm.RealmResults;
 
 public interface NoteListContract {
@@ -17,6 +19,8 @@ public interface NoteListContract {
         public void showError(String message);
 
         public void refreshAdapter(RealmResults<Note> notes);
+
+        public void exitSendDeleteMode();
     }
 
     interface presenter {
@@ -31,6 +35,8 @@ public interface NoteListContract {
         public void onOptionSortByTitle();
 
         public void onOptionAboutClick();
+
+        public void onOptionsDeleteClick(HashSet<Integer> notesToDeleteIds);
 
         public void onBackPressed();
 

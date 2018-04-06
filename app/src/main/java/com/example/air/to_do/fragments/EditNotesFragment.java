@@ -78,10 +78,6 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
         return super.onOptionsItemSelected(menuItem);
     }
 
-    public void callOnBackPressed() {
-        (getActivity()).onBackPressed();
-    }
-
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }

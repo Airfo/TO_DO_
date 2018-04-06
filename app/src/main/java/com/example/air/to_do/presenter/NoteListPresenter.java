@@ -5,14 +5,18 @@ import com.example.air.to_do.fragments.EditNotesFragment;
 import com.example.air.to_do.fragments.NoteListFragment;
 import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.model.Note;
+import com.example.air.to_do.R;
+
+import java.util.Calendar;
+import java.util.HashSet;
 
 import io.realm.Realm;
 import io.realm.Sort;
 
 public class NoteListPresenter implements NoteListContract.presenter {
-    private Realm realm=Realm.getDefaultInstance();
+    private Realm realm = Realm.getDefaultInstance();
     private NoteListFragment nLFragment;
-    private static Mode mode= Mode.getInstance();
+    private static Mode mode = Mode.getInstance();
 
     public NoteListPresenter(NoteListFragment fragment) {
         nLFragment = fragment;
@@ -58,8 +62,27 @@ public class NoteListPresenter implements NoteListContract.presenter {
     }
 
     @Override
-    public void onBackPressed() {
+    public void onOptionsDeleteClick(HashSet<Integer> notesToDeleteIds) {
+        if (notesToDeleteIds.isEmpty()) {
+            nLFragment.showError(nLFragment.getString(R.string.error_message_if_selected_none));
+        } else {
+            for (int i : notesToDeleteIds) {
+                realm.executeTransaction(r -> {
+                    realm.where(Note.class).equalTo("id", i).findFirst().deleteFromRealm();
+                });
+            }
+            nLFragment.exitSendDeleteMode();
+        }
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mode.getSendDeleteMode()) {
+            mode.setSendDeleteMode(false);
+            nLFragment.refreshAdapter(null);
+        }
     }
 
 }

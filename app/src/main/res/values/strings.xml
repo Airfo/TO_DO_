@@ -11,4 +11,5 @@
     <string name="header_list_fragment">Мои заметки</string>
     <string name="exit_about_button">Выход</string>
     <string name="error_message_if_note_is_empty">Введите текст заметки</string>
+    <string name="error_message_if_selected_none">Выберете заметки для удаления!</string>
 </resources>

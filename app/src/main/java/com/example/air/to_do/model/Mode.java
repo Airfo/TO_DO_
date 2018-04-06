@@ -5,6 +5,16 @@ public class Mode {
     private static int editNotePosition;
     private static Boolean isNew = false;
     private static Boolean sortByDate = true;
+    private static Boolean SendDeleteMode = false;
+
+
+    public static void setSendDeleteMode(Boolean sendDeleteMode) {
+        SendDeleteMode = sendDeleteMode;
+    }
+
+    public static Boolean getSendDeleteMode() {
+        return SendDeleteMode;
+    }
 
     private Mode() {
     }

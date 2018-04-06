@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_note_relativelay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".fragments.EditNotesFragment">
+    >
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -17,10 +16,17 @@
         android:paddingLeft="20dp"
         android:textAlignment="textEnd"
         android:textColor="@color/colorText"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textSize="15sp" />
-
+<CheckBox
+    android:id="@+id/select_note_checkbox"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_alignParentEnd="true"
+    android:paddingRight="20dp"
+    />
     <TextView
         android:id="@+id/date_note_textview"
         android:layout_width="match_parent"
@@ -28,7 +34,7 @@
         android:paddingBottom="10dp"
         android:paddingRight="20dp"
         android:gravity="end"
-        android:layout_below="@id/title_note_textview"
+        android:layout_below="@id/select_note_checkbox"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:textAlignment="textEnd"

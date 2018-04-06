@@ -28,12 +28,13 @@ import io.realm.RealmResults;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NoteListFragment extends Fragment implements NoteRowClickListener<Note>, NoteListContract.view {
+public class NoteListFragment extends Fragment implements NoteRowClickListener<Note>, NoteListContract.view, NoteRowLongClickListener<Note> {
     private RecyclerView rv;
     private NoteListPresenter presenter;
     private static NotesListRVAdapter adapter;
     private boolean Sorting = false;
     private Mode mode= Mode.getInstance();
+    private Menu menu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,10 +57,11 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         rv.setAdapter(adapter);
         getActivity().setTitle(R.string.header_list_fragment);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(false);
+        ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         Sorting = true;
         presenter.onInitilizeViews();
         adapter.setRowClickListener(this);
+        adapter.setRowLongClickListener(this);
     }
 
     @Override
@@ -78,6 +80,9 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
                 return true;
             case R.id.action_open_about:
                 presenter.onOptionAboutClick();
+                return true;
+            case R.id.action_delete_notes:
+                presenter.onOptionsDeleteClick(adapter.getIdNotesToDelete());
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
@@ -115,6 +120,8 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_main, menu);
+        this.menu=menu;
+        menu.getItem(1).setVisible(false);
     }
 
 
@@ -122,4 +129,23 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     public void onRowClicked(int id) {
         presenter.onRowClicked(id);
     }
+
+    @Override
+    public void exitSendDeleteMode(){
+        mode.setSendDeleteMode(false);
+        menu.getItem(1).setVisible(false);
+        adapter.clearSelectedNotes();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRowLongClicked() {
+        if(!mode.getSendDeleteMode()){
+            mode.setSendDeleteMode(true);
+            menu.getItem(1).setVisible(true);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+
 }
