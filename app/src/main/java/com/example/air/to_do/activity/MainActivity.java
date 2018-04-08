@@ -26,14 +26,7 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
     private static Toolbar toolbar;
     private Realm realm;
-    private RealmResults<Note> notes;
-    private Mode mode;
-
-    private final OrderedRealmCollectionChangeListener<RealmResults<Note>> realmChangeListener = (people, changeSet) -> {
-        String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
-        String deletions = changeSet.getDeletions().length == 0 ? "" : "\n - Deletions: " + Arrays.toString(changeSet.getDeletions());
-        String changes = changeSet.getChanges().length == 0 ? "" : "\n - Changes: " + Arrays.toString(changeSet.getChanges());
-    };
+    private Mode mode=Mode.getInstance();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -48,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ChangeFragment(new NoteListFragment());
-        //Realm.deleteRealm(Realm.getDefaultConfiguration());
+        //Realm.deleteRealm(Realm.getDefaultConfiguration()); //очистка БД
         realm = Realm.getDefaultInstance();
-        notes = realm.where(Note.class).findAllAsync();
-        notes.addChangeListener(realmChangeListener);
     }
 
     public InputMethodManager getInputMethodManager() {
@@ -64,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void showBD() {
+    public void showBD() { //для просмотра содержимого БД
         for (int i = 0; i < realm.where(Note.class).count(); i++) {
             Log.d("value", "Value:     " + realm.where(Note.class).findAll().get(i).getTitle() + " " + realm.where(Note.class).findAll().get(i).getFormatedDateString());
         }
@@ -73,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        notes.removeAllChangeListeners(); // Remove the change listener when no longer needed.
         realm.close(); // Remember to close Realm when done.
     }
 

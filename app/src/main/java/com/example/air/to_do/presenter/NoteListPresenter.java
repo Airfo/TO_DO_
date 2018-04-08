@@ -7,14 +7,16 @@ import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.model.Note;
 import com.example.air.to_do.R;
 
-import java.util.Calendar;
 import java.util.HashSet;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class NoteListPresenter implements NoteListContract.presenter {
     private Realm realm = Realm.getDefaultInstance();
+    RealmResults<Note> results;
     private NoteListFragment nLFragment;
     private static Mode mode = Mode.getInstance();
 
@@ -25,9 +27,9 @@ public class NoteListPresenter implements NoteListContract.presenter {
     @Override
     public void onInitilizeViews() {
         if (mode.getSortByDate()) {
-            nLFragment.refreshAdapter(realm.where(Note.class).sort("date", Sort.DESCENDING).findAll());
+            requestSortData("date", Sort.DESCENDING);
         } else {
-            nLFragment.refreshAdapter(realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
+            requestSortData("title", Sort.ASCENDING);
         }
     }
 
@@ -47,14 +49,27 @@ public class NoteListPresenter implements NoteListContract.presenter {
     @Override
     public void onOptionSortByDate() {
         mode.setSortByDate(true);
-        nLFragment.refreshAdapter(realm.where(Note.class).sort("date", Sort.DESCENDING).findAll());
+        requestSortData("date", Sort.DESCENDING);
     }
 
     @Override
     public void onOptionSortByTitle() {
         mode.setSortByDate(false);
-        nLFragment.refreshAdapter(realm.where(Note.class).sort("title", Sort.ASCENDING).findAll());
+        requestSortData("title", Sort.ASCENDING);
     }
+
+    @Override
+    public void requestSortData(String fieldName, Sort sort) {
+        results = realm.where(Note.class).sort(fieldName, sort).findAllAsync();
+        results.addChangeListener(new RealmChangeListener<RealmResults<Note>>() {
+            @Override
+            public void onChange(RealmResults<Note> notes) {
+                nLFragment.refreshAdapter(notes);
+            }
+        });
+
+    }
+
 
     @Override
     public void onOptionAboutClick() {
@@ -66,15 +81,19 @@ public class NoteListPresenter implements NoteListContract.presenter {
         if (notesToDeleteIds.isEmpty()) {
             nLFragment.showError(nLFragment.getString(R.string.error_message_if_selected_none));
         } else {
-            for (int i : notesToDeleteIds) {
-                realm.executeTransaction(r -> {
-                    realm.where(Note.class).equalTo("id", i).findFirst().deleteFromRealm();
-                });
-            }
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    Realm realm = Realm.getDefaultInstance();
+                    for (int i : notesToDeleteIds) {
+                        realm.executeTransaction(r -> {
+                            realm.where(Note.class).equalTo("id", i).findFirst().deleteFromRealm();
+                        });
+                    }
+                }
+            });
+            thread.start();
             nLFragment.exitSendDeleteMode();
         }
-
-
     }
 
     @Override
@@ -83,6 +102,14 @@ public class NoteListPresenter implements NoteListContract.presenter {
             mode.setSendDeleteMode(false);
             nLFragment.refreshAdapter(null);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        if (results != null) {
+            results.removeAllChangeListeners();
+        }
+        realm.close();
     }
 
 }

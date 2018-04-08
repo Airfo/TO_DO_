@@ -22,6 +22,8 @@ public interface EditNotesContract {
         public void onBackPressed();
 
         public void onOptionEditDoneClick(String text);
+
+        public void onDetach();
     }
 
 

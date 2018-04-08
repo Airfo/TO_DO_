@@ -33,7 +33,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     private NoteListPresenter presenter;
     private static NotesListRVAdapter adapter;
     private boolean Sorting = false;
-    private Mode mode= Mode.getInstance();
+    private Mode mode;
     private Menu menu;
 
     @Override
@@ -62,6 +62,12 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         presenter.onInitilizeViews();
         adapter.setRowClickListener(this);
         adapter.setRowLongClickListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        presenter.onDetach();
     }
 
     @Override

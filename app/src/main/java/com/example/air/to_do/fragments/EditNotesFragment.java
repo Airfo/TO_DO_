@@ -18,7 +18,6 @@ import com.example.air.to_do.model.Mode;
 import com.example.air.to_do.presenter.EditNotesPresenter;
 import com.example.air.to_do.activity.MainActivity;
 import com.example.air.to_do.R;
-import com.example.air.to_do.model.Note;
 
 
 /**
@@ -82,4 +81,9 @@ public class EditNotesFragment extends Fragment implements EditNotesContract.vie
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        presenter.onDetach();
+    }
 }
