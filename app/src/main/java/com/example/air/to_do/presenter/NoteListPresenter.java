@@ -1,5 +1,10 @@
 package com.example.air.to_do.presenter;
 
+import android.annotation.SuppressLint;
+import android.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
+
 import com.example.air.to_do.NoteListContract;
 import com.example.air.to_do.fragments.EditNotesFragment;
 import com.example.air.to_do.fragments.NoteListFragment;
@@ -16,7 +21,9 @@ import io.realm.Sort;
 
 public class NoteListPresenter implements NoteListContract.presenter {
     private Realm realm = Realm.getDefaultInstance();
+    String emailMessage = "";
     RealmResults<Note> results;
+    Handler handler;
     private NoteListFragment nLFragment;
     private static Mode mode = Mode.getInstance();
 
@@ -32,6 +39,45 @@ public class NoteListPresenter implements NoteListContract.presenter {
             requestSortData("title", Sort.ASCENDING);
         }
     }
+
+    @SuppressLint("HandlerLeak")
+    @Override
+    public void onOptionsSendClick(HashSet<Integer> notesToDeleteIds) {
+        if (notesToDeleteIds.isEmpty()) {
+            nLFragment.showError(nLFragment.getString(R.string.error_message_if_selected_none));
+        } else {
+            emailMessage = "";
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    Realm realm = Realm.getDefaultInstance();
+                    int j=1;
+                    for (int i : notesToDeleteIds) {
+                        emailMessage = emailMessage + "\r\n Note №" + j + "\r\n" + realm.where(Note.class).equalTo("id", i).findFirst().getText()+"\r\n";
+                        j++;
+                    }
+                    Message msg;
+                    msg = handler.obtainMessage(1, emailMessage);
+                    handler.sendMessage(msg);
+                    realm.close();
+                }
+            });
+            thread.start();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if (msg.what == 1) {
+                        nLFragment.exitSendDeleteMode();
+                        nLFragment.sendEmail((String) msg.obj);
+                    }
+                }
+            };
+        }
+
+
+    }
+
+
 
     @Override
     public void onRowClicked(int id) {

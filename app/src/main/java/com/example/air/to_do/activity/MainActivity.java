@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ChangeFragment(new NoteListFragment());
-        //Realm.deleteRealm(Realm.getDefaultConfiguration()); //очистка БД
         realm = Realm.getDefaultInstance();
+        //Realm.deleteRealm(Realm.getDefaultConfiguration()); //очистка БД
     }
 
     public InputMethodManager getInputMethodManager() {

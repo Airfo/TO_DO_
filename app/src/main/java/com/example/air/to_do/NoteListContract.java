@@ -22,6 +22,8 @@ public interface NoteListContract {
         public void refreshAdapter(RealmResults<Note> notes);
 
         public void exitSendDeleteMode();
+
+        public void sendEmail(String message);
     }
 
     interface presenter {
@@ -40,6 +42,8 @@ public interface NoteListContract {
         public void onOptionAboutClick();
 
         public void onOptionsDeleteClick(HashSet<Integer> notesToDeleteIds);
+
+        public void onOptionsSendClick(HashSet<Integer> notesToDeleteIds);
 
         public void onBackPressed();
 

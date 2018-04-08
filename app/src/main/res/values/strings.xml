@@ -1,15 +1,18 @@
 <resources>
-    <string name="app_name">TO_DO</string>
-    <string name="add_note">Добавить</string>
-    <string name="sort_by_date">Сортировать по дате</string>
-    <string name="sort_by_title">Сортировать по заголовку</string>
-    <string name="about">О программе</string>
-    <string name="version">TO_DO version - 0.7</string>
-    <string name="done">Готово</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="header_edit_fragment">Новая заметка</string>
-    <string name="header_list_fragment">Мои заметки</string>
-    <string name="exit_about_button">Выход</string>
-    <string name="error_message_if_note_is_empty">Введите текст заметки</string>
-    <string name="error_message_if_selected_none">Выберете заметки для удаления!</string>
+<string name="app_name">TO_DO</string>
+<string name="add_note">Добавить</string>
+<string name="delete_note">Удалить</string>
+<string name="send_note">Отправить по почте</string>
+<string name="sort_by_date">Сортировать по дате</string>
+<string name="sort_by_title">Сортировать по заголовку</string>
+<string name="about">О программе</string>
+<string name="version">TO_DO version - 0.7</string>
+<string name="done">Готово</string>
+<!-- TODO: Remove or change this placeholder text -->
+<string name="header_edit_fragment">Новая заметка</string>
+<string name="header_list_fragment">Мои заметки</string>
+<string name="exit_about_button">Выход</string>
+<string name="error_message_if_note_is_empty">Введите текст заметки</string>
+<string name="error_message_if_selected_none">Выберете заметки!</string>
+<string name="title_send_email">Выберете почтовый клиент...</string>
 </resources>

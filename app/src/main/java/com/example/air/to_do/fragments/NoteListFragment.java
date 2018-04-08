@@ -1,6 +1,10 @@
 package com.example.air.to_do.fragments;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,8 +51,10 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         return view;
     }
 
+
     public void initialiazeViews(View view) {
         setHasOptionsMenu(true);
+        mode.setSendDeleteMode(false);
         rv = view.findViewById(R.id.list_note_recyclerview);
         ((MainActivity) getActivity()).getInputMethodManager().toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
@@ -62,6 +68,8 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         presenter.onInitilizeViews();
         adapter.setRowClickListener(this);
         adapter.setRowLongClickListener(this);
+
+
     }
 
     @Override
@@ -89,6 +97,9 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
                 return true;
             case R.id.action_delete_notes:
                 presenter.onOptionsDeleteClick(adapter.getIdNotesToDelete());
+                return true;
+            case R.id.action_send_notes:
+                presenter.onOptionsSendClick(adapter.getIdNotesToDelete());
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
@@ -128,6 +139,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         inflater.inflate(R.menu.menu_main, menu);
         this.menu=menu;
         menu.getItem(1).setVisible(false);
+        menu.getItem(2).setVisible(false);
     }
 
 
@@ -140,8 +152,17 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
     public void exitSendDeleteMode(){
         mode.setSendDeleteMode(false);
         menu.getItem(1).setVisible(false);
+        menu.getItem(2).setVisible(false);
         adapter.clearSelectedNotes();
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void sendEmail(String message) {
+        Intent emailIntent=new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_TEXT,message);
+        emailIntent.setType("message/rfc822");
+        startActivity(Intent.createChooser(emailIntent,this.getString(R.string.title_send_email)));
     }
 
     @Override
@@ -149,6 +170,7 @@ public class NoteListFragment extends Fragment implements NoteRowClickListener<N
         if(!mode.getSendDeleteMode()){
             mode.setSendDeleteMode(true);
             menu.getItem(1).setVisible(true);
+            menu.getItem(2).setVisible(true);
             adapter.notifyDataSetChanged();
         }
     }
